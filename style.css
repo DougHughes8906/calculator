@@ -1,0 +1,138 @@
+
+html {
+	margin: 0px;
+	height: 100%;
+}
+
+body {
+	margin: 0px;
+	height: 100%;
+	display: grid;
+	grid-template-rows: 1fr 375px 1fr;
+}
+
+h1 {
+	margin-right: auto;
+	margin-left: auto;
+	width: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#container {
+	margin-right: auto;
+	margin-left: auto;
+	padding: 24px;
+	width: 375px;
+	background-color: #a7a7a7;
+	display: grid;
+	grid-template-rows: 1.4fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-gap: 14px;
+	border: 1px solid #5d5d5d;
+	border-radius: 6px;
+	box-shadow: 3px 3px 0px 4px #5d5d5d;
+}
+
+#display {
+	grid-column-start: 1;
+	grid-column-end: 5;
+	background-color: #dae4da;
+	justify-content: flex-end;
+	padding-right: 10px;
+	border-radius: 0px;
+	box-shadow: none;
+	font-family: 'Electrolize', sans-serif;
+	font-size: 20px;
+	user-select: text;	
+}
+
+#zero {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	justify-content: flex-start;
+	padding-left: 32px;
+}
+
+#clear {
+	background-color: #f7f792;
+	font-size: 18px;
+	transition: background-color 0.2s linear;
+}
+
+#equals {
+	background-color: #f7c1ca;
+	font-size: 26px;
+	transition: background-color 0.2s linear;
+}
+
+#modulus {
+	font-size: 22px;
+}
+
+#subtract {
+	font-size: 30px;
+}
+
+#multiply {
+	font-size: 26px;
+}
+
+#plus-minus {
+	font-size: 25px;
+}
+
+.item {
+	border: 1px solid black;
+	box-shadow: 2px 2px 0px 2px #000000;
+	border-radius: 4px;
+	font-family: 'Nunito', sans-serif;		
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.3s box-shadow;
+	user-select: none;	
+}
+
+.item:active{
+	box-shadow: 2px 2px #000000;
+	transition: 0s box-shadow;	
+}
+
+.operand {
+	background-color: #41abb1;
+	color: white;
+	font-size: 18px;
+	transition: background-color 0.2s linear;		
+}
+
+.operand:active {
+	color: black;
+	background-color: #8fe2e6;
+	transition: background-color 0s;	
+}
+
+.operator {
+	background-color: #e2b460;
+	font-size: 28px;
+	transition: background-color 0.2s linear;
+}
+
+.operator:active {
+	color: white;
+	background-color: #e89907;
+	transition: background-color 0s;
+}
+
+#equals:active {
+	color: white;
+	background-color: #d46679;
+	transition: background-color 0s;
+}
+
+#clear:active {
+	color: white;
+	background-color: #d0d000;
+	transition: background-color 0s;
+}

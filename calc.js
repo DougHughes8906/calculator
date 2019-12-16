@@ -128,11 +128,20 @@ plmBtn.addEventListener("click", function() {
 	}
 });
 
-// decimal button event-listener. Adds a decimal to the current value
+// decimal button event listener. Adds a decimal to the current value
 // being displayed as long as there isn't one already
 decBtn.addEventListener("click", function() {
 	if (!hasDecimal) {
 		hasDecimal = true;
 		displayChar(".");
 	}
+});
+
+// clear button event listener. Total reset to the calculation. Sets 
+// the display value to 0 and "forgets" any calculation currently 
+// taking place
+clrBtn.addEventListener("click", function() {
+	displayVal = "0";
+	hasDecimal = false;
+	displayText.nodeValue = displayVal;
 });

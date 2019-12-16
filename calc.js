@@ -48,17 +48,14 @@ function operate(operator, a, b)
 
 function  displayChar(chtr) {
 	// if the next character is 0 and 0 is already displayed, do nothing
-	if (chtr !== "0" || displayVal !== "0")
-	{
+	if (chtr !== "0" || displayVal !== "0") {
 		// if display val is currently 0, replace the 0 with the entered
-		// digit
-		if (displayVal === "0")
-		{
+		// digit (unless we are adding a decimal point)
+		if (displayVal === "0" && chtr !== ".") {	
 			displayVal = chtr;
 		}
-		else
-		{
-			displayVal = displayVal + chtr;
+		else {
+			displayVal += chtr;
 		}
 		displayText.nodeValue = displayVal;
 	}
@@ -74,6 +71,9 @@ const MOD = 5;
 
 // holds the current value being displayed as a String
 let displayVal = "0";
+// holds true if the current vlaue being displayed already has
+// a decimal and false otherwise
+let hasDecimal = false;
 
 // references to all of the relevant elements of the calculator
 const display = document.querySelector("#display");
@@ -128,4 +128,11 @@ plmBtn.addEventListener("click", function() {
 	}
 });
 
-
+// decimal button event-listener. Adds a decimal to the current value
+// being displayed as long as there isn't one already
+decBtn.addEventListener("click", function() {
+	if (!hasDecimal) {
+		hasDecimal = true;
+		displayChar(".");
+	}
+});

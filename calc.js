@@ -97,11 +97,9 @@ const sevenBtn = document.querySelector("#seven");
 const eightBtn = document.querySelector("#eight");
 const nineBtn = document.querySelector("#nine");
 
-
 // text node for the calculator display 
 displayText = document.createTextNode(displayVal);
 display.appendChild(displayText);
-
 
 // event listeners for each of the number buttons which add the 
 // relevant number to the display when clicked
@@ -116,6 +114,18 @@ sevenBtn.addEventListener("click", function() { displayChar("7"); });
 eightBtn.addEventListener("click", function() { displayChar("8"); });
 nineBtn.addEventListener("click", function() { displayChar("9"); });
 
-
+// plus-minus button event listener. Changes the sign of the display
+// value. If the display value is 0, then it does nothing.
+plmBtn.addEventListener("click", function() {
+	if (displayVal !== "0") {
+		if (displayVal.charAt(0) === "-") {	
+			displayVal = displayVal.slice(1);
+		}
+		else {
+			displayVal = "-" + displayVal;
+		}
+		displayText.nodeValue = displayVal;
+	}
+});
 
 

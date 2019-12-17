@@ -14,6 +14,9 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
+	if (b === 0) {
+		notANumber = true;
+	}
 	return a / b;
 }
 
@@ -46,9 +49,16 @@ function operate(operator, a, b)
 	}
 }
 
-// outputs a string to the calculator display. 
+// outputs a string to the calculator display. However, if the current
+// calculation is NaN, then no matter what, Not a number is output. This
+// can only be reset by the user pressing the clear button 
 function output(value) {
-	displayText.nodeValue = value;	
+	if (notANumber) {
+		displayText.nodeValue = "Not a number";
+	}
+	else {
+		displayText.nodeValue = value;
+	}	
 }
 
 // displays a given character as the next character on the currently
@@ -91,7 +101,7 @@ const MOD = 5;
 
 // holds the current value being displayed as a String
 let displayVal = "0";
-// holds true if the current vlaue being displayed already has
+// holds true if the current value being displayed already has
 // a decimal and false otherwise
 let hasDecimal = false;
 // holds the type of the first operator, which is set if there is
@@ -114,6 +124,9 @@ let lastValue = null;
 let equPressed = false;
 // set to true immediately after an operator is pressed
 let opPressed = false;
+// set to true if the current value of the calculation is not a number
+// (i.e. this is set after a division by 0)
+let notANumber = false;
 
 // references to all of the relevant elements of the calculator
 const display = document.querySelector("#display");
@@ -189,7 +202,8 @@ clrBtn.addEventListener("click", function() {
 	lastValue = null;
 	opPressed = false;
 	equPressed = false;
-	displayText.nodeValue = displayVal;
+	notANumber = false;
+	output(displayVal);	
 });
 
 // handles addition / subtraction operations. Action is
@@ -319,7 +333,7 @@ equBtn.addEventListener("click", function() {
 		}
 		opPressed = false;
 	}	
-
+	// a value was entered immediately prior to pressing equals
 	else {
 		newValue = +displayVal;
 		if (firstOperator !== NO_OP) {

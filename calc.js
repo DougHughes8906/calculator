@@ -245,6 +245,69 @@ subBtn.addEventListener("click", function() {
 	handleAddSub(MINUS);
 });
 
+// Handles action following the multiplication, division, or
+// modulo button being pressed
+function handleMulDivMod(operator) {
+	// if another operator is pressed immediately before this, nothing
+	// needs to be done other than what is handled after this if 
+	// statement (i.e. essentially the last operator is ignored
+	// and replaced with the new operator)
+	if (!opPressed) {
+		let newValue = +displayVal;
+		// two previous operations
+		if (firstOperator !== NO_OP) {
+			let firstRes = operate(lastOperator, lastValue, newValue);
+			let totalRes = operate(firstOperator, firstValue, firstRes);
+			lastValue = totalRes;
+			firstOperator = NO_OP;
+			firstValue = null;
+		}
+		// one previous operation
+		else if (lastOperator !== NO_OP) {
+			// if the last operation was a plus or minus, then can't evaluate
+			// yet to respect order of operations
+			if (lastOperator === PLUS || lastOperator === MINUS) {
+				firstOperator = lastOperator;
+				firstValue = lastValue;
+				lastValue = newValue;
+			}
+			else {
+				let res = operate(lastOperator, lastValue, newValue);
+				lastValue = res;
+			}
+		}	
+		// no previous operations
+		else {
+			lastValue = newValue;
+		}
+		if (equPressed) {	
+			equPressed = false;
+		}
+	}
+
+	lastOperator = operator;
+	displayVal = lastValue.toString();
+	output(displayVal);
+	opPressed = true;
+	hasDecimal = false;
+}
+
+
+// multiplication button event listener
+mulBtn.addEventListener("click", function() {
+	handleMulDivMod(TIMES);
+});
+
+// division button event listener
+divBtn.addEventListener("click", function() {
+	handleMulDivMod(DIV);
+});
+
+// modulo button event listener
+modBtn.addEventListener("click", function() {
+	handleMulDivMod(MOD);
+});
+
 // equals button event listener.
 equBtn.addEventListener("click", function() {
 	// if an operator was just pressed, prior to pressing equals, 

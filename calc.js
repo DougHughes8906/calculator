@@ -46,23 +46,43 @@ function operate(operator, a, b)
 	}
 }
 
-function  displayChar(chtr) {
-	// if the next character is 0 and 0 is already displayed, do nothing
-	if (chtr !== "0" || displayVal !== "0") {
+// outputs a string to the calculator display. 
+function output(value) {
+	displayText.nodeValue = value;	
+}
+
+// displays a given character as the next character on the currently
+// displayed number
+function  displayChar(chtr) { 
+	// if the next character is 0 and 0 is already displayed, do nothing.
+	// if an operator has just been pressed or an equals has just been
+	// pressed, any character is printed. 
+	if (chtr !== "0" || displayVal !== "0" || equPressed || opPressed) {	
+		if (equPressed || opPressed) {
+			equPressed = false;
+			opPressed = false;
+			if (chtr === ".") {
+				displayVal = "0.";
+			}
+			else {
+				displayVal = chtr;
+			}
+		}
 		// if display val is currently 0, replace the 0 with the entered
 		// digit (unless we are adding a decimal point)
-		if (displayVal === "0" && chtr !== ".") {	
+		else if (displayVal === "0" && chtr !== ".") {	
 			displayVal = chtr;
 		}
 		else {
 			displayVal += chtr;
 		}
-		displayText.nodeValue = displayVal;
+		output(displayVal);	
 	}
 }
 
 
 // constants representing each of the operators
+const NO_OP = 0;  // represents no operation
 const PLUS = 1;
 const MINUS = 2;
 const TIMES = 3;
@@ -74,6 +94,26 @@ let displayVal = "0";
 // holds true if the current vlaue being displayed already has
 // a decimal and false otherwise
 let hasDecimal = false;
+// holds the type of the first operator, which is set if there is
+// a need to track to two prior operators (ex. 43 + 23 * ...).
+// Set to NO_OP if there is no first operator currently being 
+// tracked.
+let firstOperator = NO_OP;
+// holds the type of the last operator, which is set to NO_OP
+// if there is not currently a last operation being tracked
+let lastOperator = NO_OP;
+// holds the numerical value of the first data entry that is being
+// tracked (null if no such entry is being tracked). This value is 
+// set if there is a need to track 2 prior values (ex. if there is an
+// addition folllowed by a multiplication)
+let firstValue = null;
+// holds the numerical value of the last data entry (null if there
+// is no last data entry being tracked)
+let lastValue = null;
+// set to true immediately after an equals sign is pressed
+let equPressed = false;
+// set to true immediately after an operator is pressed
+let opPressed = false;
 
 // references to all of the relevant elements of the calculator
 const display = document.querySelector("#display");
@@ -124,7 +164,7 @@ plmBtn.addEventListener("click", function() {
 		else {
 			displayVal = "-" + displayVal;
 		}
-		displayText.nodeValue = displayVal;
+		output(displayVal);	
 	}
 });
 
@@ -142,6 +182,103 @@ decBtn.addEventListener("click", function() {
 // taking place
 clrBtn.addEventListener("click", function() {
 	displayVal = "0";
-	hasDecimal = false;
+	hasDecimal = false;	
+	firstOperator = NO_OP;
+	lastOperator = NO_OP;
+	firstValue = null;
+	lastValue = null;
+	opPressed = false;
+	equPressed = false;
 	displayText.nodeValue = displayVal;
+});
+
+// handles addition / subtraction operations. Action is
+// dependent on the state of the calculation. 
+function handleAddSub(operator)
+{
+	// ignore last operator if one was just pressed without a 
+	// number being entered afterwards
+	if (opPressed)
+	{
+		if (firstOperator !== NO_OP) {	
+			lastOperator = firstOperator;
+			firstOperator = NO_OP;
+			lastValue = operate(lastOperator, firstValue, lastValue);
+		}	
+	}	
+
+	else {
+		let newValue = +displayVal;
+		if (firstValue !== null) {	
+			let firstRes = operate(lastOperator, lastValue, newValue);
+			let totalRes = operate(firstOperator, firstValue, firstRes);
+			firstValue = null;
+			lastValue = totalRes;
+			firstOperator = NO_OP;	
+		}
+		else if (lastValue !== null) {
+			let res = operate(lastOperator, lastValue, newValue);
+			lastValue = res;	
+		} 
+		else {	
+			lastValue = newValue;	
+		}
+		if (equPressed) {	
+			equPressed = false;
+		}
+	}
+
+	lastOperator = operator;
+	displayVal = lastValue.toString();
+	output(displayVal);
+	opPressed = true;
+	hasDecimal = false;
+}
+
+// addition button event listener. 
+addBtn.addEventListener("click", function() {
+	handleAddSub(PLUS);	
+});
+
+// subtraction button event listener.
+subBtn.addEventListener("click", function() {
+	handleAddSub(MINUS);
+});
+
+// equals button event listener.
+equBtn.addEventListener("click", function() {
+	// if an operator was just pressed, prior to pressing equals, 
+	// ignore that operator
+	if (opPressed) {	
+		if (firstOperator !== NO_OP) {
+			let res = operate(firstOperator, firstValue, lastValue);
+			lastValue = res;
+		}
+		opPressed = false;
+	}	
+
+	else {
+		newValue = +displayVal;
+		if (firstOperator !== NO_OP) {
+			let firstRes = operate(lastOperator, lastValue, newValue);
+			let totalRes = operate(firstOperator, firstValue, firstRes);
+			lastValue = totalRes;
+		}	
+		else if (lastOperator !== NO_OP) {	
+			let res = operate(lastOperator, lastValue, newValue);
+			lastValue = res;	
+		}
+		else {
+			lastValue = newValue;
+		}
+	}
+
+	displayVal = lastValue.toString();
+	output(displayVal);
+	firstValue = null;
+	lastValue = null;
+	firstOperator = NO_OP;
+	lastOperator = NO_OP;
+	hasDecimal = false;
+	equPressed = true;	
 });

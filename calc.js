@@ -57,6 +57,33 @@ function output(value) {
 		displayText.nodeValue = "Not a number";
 	}
 	else {
+		// the max/min values after which exponential notation is used
+		const maxNonExp = 10**12 - 1;
+		const minNonExp = 10**-11;
+		// max number of digits after which point the output is rounded
+		const maxDigits = 15;
+		// if value is negative, handle as if positive and then add negative
+		// sign back at end
+		let isNeg = false;	
+		if (value.charAt(0) === "-") {
+			isNeg = true;
+			value = value.slice(1);
+		}
+		let valNum = +value;
+			
+		if (opPressed || equPressed) {		
+			if (valNum >= maxNonExp || valNum <= minNonExp) {	
+				value = valNum.toExponential(12);	
+			}
+			else if (value.length - 1 > maxDigits) {
+				let decimalPlace = value.indexOf(".");
+				let decimalDigits = maxDigits - decimalPlace;	
+				value = valNum.toFixed(decimalDigits);					
+			}
+		}
+		if (isNeg) {
+					value = "-" + value;
+		}
 		displayText.nodeValue = value;
 	}	
 }
@@ -244,9 +271,9 @@ function handleAddSub(operator)
 
 	lastOperator = operator;
 	displayVal = lastValue.toString();
-	output(displayVal);
 	opPressed = true;
 	hasDecimal = false;
+	output(displayVal);	
 }
 
 // addition button event listener. 
@@ -301,9 +328,9 @@ function handleMulDivMod(operator) {
 
 	lastOperator = operator;
 	displayVal = lastValue.toString();
-	output(displayVal);
 	opPressed = true;
 	hasDecimal = false;
+	output(displayVal);		
 }
 
 
@@ -351,11 +378,11 @@ equBtn.addEventListener("click", function() {
 	}
 
 	displayVal = lastValue.toString();
-	output(displayVal);
+	equPressed = true;
 	firstValue = null;
 	lastValue = null;
 	firstOperator = NO_OP;
 	lastOperator = NO_OP;
-	hasDecimal = false;
-	equPressed = true;	
+	hasDecimal = false;	
+	output(displayVal);	
 });

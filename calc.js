@@ -101,8 +101,27 @@ function  displayChar(chtr) {
 			if (chtr === ".") {
 				displayVal = "0.";
 			}
+			// backspace after an operator or equals has been pressed, causes
+			// a 0 to be displayed
+			else if (chtr === "BS") {
+				displayVal = "0";
+			}
 			else {
 				displayVal = chtr;
+			}
+		}
+		// handle backspace
+		else if (chtr === "BS") {
+			if (displayVal.length === 1) {
+				displayVal = "0";
+			}
+			else {
+				// if decimal point is about to be deleted, note that
+				// another decimal can be added to this input
+				if (displayVal.charAt(displayVal.length - 1) === ".") {
+					hasDecimal = false;
+				}
+				displayVal = displayVal.slice(0, displayVal.length - 1);
 			}
 		}
 		// if display val is currently 0, replace the 0 with the entered
@@ -475,6 +494,11 @@ equBtn.addEventListener("click", function() {
 	pressEquals();	
 });
 
+// performs a backspace operation, deleting the last character
+// entered from the input value
+function performBackspace() {
+	displayChar("BS");
+}
 
 // holds true if the user is currently holding shift
 let isShifted = false;
@@ -491,8 +515,7 @@ let unshiftVal = null;
 // calculation until keyup. Only allows one key on the calculator to 
 // be down at a time.
 
-document.addEventListener("keydown", function(event) {
-	console.log(`Keydown: ${event.key} / Keycode: ${event.keyCode}`);
+document.addEventListener("keydown", function(event) {	
 	if (keyValue === null) {
 		pressedVal = event.key || event.keyCode;
 		if (!isShifted) {
@@ -564,6 +587,9 @@ document.addEventListener("keydown", function(event) {
 				plmBtn.classList.toggle("activeOperator");
 				keyValue = pressedVal;
 			}
+			else if (pressedVal === "Backspace" || pressedVal === 8) {
+				keyValue = pressedVal;
+			}
 		}
 
 		// shifted values
@@ -588,20 +614,13 @@ document.addEventListener("keydown", function(event) {
 			}	
 		}
 	}		
-});
-
-// resets the two variables used to track input
-function resetInput() {
-	keyValue = null;	
-	shiftedVal = false;
-}		
+});		
 
 // event listener for keyboard keyup action. On keyup the original 
 // styling for the button is returned and the actual action of pressing
 // the button is taken. 
 
-document.addEventListener("keyup", function(event) {
-	console.log(`Keyup: ${event.key} / Keycode: ${event.keyCode}`);
+document.addEventListener("keyup", function(event) {	
 	let upValue = event.key || event.keyCode;
 
 	if (upValue === "Shift" || upValue === 16) {
@@ -674,6 +693,9 @@ document.addEventListener("keyup", function(event) {
 			else if (keyValue === "n" || keyValue === 78) {
 				plmBtn.classList.toggle("activeOperator");
 				pressPlusMinus();
+			}
+			else if (keyValue === "Backspace" || keyValue === 8) {
+				performBackspace();
 			}
 		}
 		// the input value was shifted

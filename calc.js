@@ -72,7 +72,7 @@ function output(value) {
 		let valNum = +value;
 			
 		if (opPressed || equPressed) {		
-			if (valNum >= maxNonExp || valNum <= minNonExp) {	
+			if (valNum >= maxNonExp || (valNum <= minNonExp && valNum !== 0)) {	
 				value = valNum.toExponential(12);	
 			}
 			else if (value.length - 1 > maxDigits) {
@@ -181,22 +181,66 @@ const nineBtn = document.querySelector("#nine");
 displayText = document.createTextNode(displayVal);
 display.appendChild(displayText);
 
+// functions for actions taken when each numerical button is
+// pressed (add the relevant number to the value being displayed
+// on the screen)
+
+function pressZero() {
+	displayChar("0");
+}
+
+function pressOne() {
+	displayChar("1");
+}
+
+function pressTwo() {
+	displayChar("2");
+}
+
+function pressThree() {
+	displayChar("3");
+}
+
+function pressFour() {
+	displayChar("4");
+}
+
+function pressFive() {
+	displayChar("5");
+}
+
+function pressSix() {
+	displayChar("6");
+}
+
+function pressSeven() {
+	displayChar("7");
+}
+
+function pressEight() {
+	displayChar("8");
+}
+
+function pressNine() {
+	displayChar("9");
+}
+
 // event listeners for each of the number buttons which add the 
 // relevant number to the display when clicked
-zeroBtn.addEventListener("click", function() { displayChar("0"); });
-oneBtn.addEventListener("click", function() { displayChar("1"); });
-twoBtn.addEventListener("click", function() { displayChar("2"); });
-threeBtn.addEventListener("click", function() { displayChar("3"); });
-fourBtn.addEventListener("click", function() { displayChar("4"); });
-fiveBtn.addEventListener("click", function() { displayChar("5"); });
-sixBtn.addEventListener("click", function() { displayChar("6"); });
-sevenBtn.addEventListener("click", function() { displayChar("7"); });
-eightBtn.addEventListener("click", function() { displayChar("8"); });
-nineBtn.addEventListener("click", function() { displayChar("9"); });
+zeroBtn.addEventListener("click", function() { pressZero(); });
+oneBtn.addEventListener("click", function() { pressOne(); });
+twoBtn.addEventListener("click", function() { pressTwo(); });
+threeBtn.addEventListener("click", function() { pressThree(); });
+fourBtn.addEventListener("click", function() { pressFour(); });
+fiveBtn.addEventListener("click", function() { pressFive(); });
+sixBtn.addEventListener("click", function() { pressSix(); });
+sevenBtn.addEventListener("click", function() { pressSeven(); });
+eightBtn.addEventListener("click", function() { pressEight(); });
+nineBtn.addEventListener("click", function() { pressNine(); });
 
-// plus-minus button event listener. Changes the sign of the display
+// Presses plus-minus button. Changes the sign of the display
 // value. If the display value is 0, then it does nothing.
-plmBtn.addEventListener("click", function() {
+function pressPlusMinus() {
 	if (displayVal !== "0") {
 		if (displayVal.charAt(0) === "-") {	
 			displayVal = displayVal.slice(1);
@@ -206,21 +250,31 @@ plmBtn.addEventListener("click", function() {
 		}
 		output(displayVal);	
 	}
+}
+
+// plus-minus button click event listener. 
+plmBtn.addEventListener("click", function() {
+	pressPlusMinus();	
 });
 
-// decimal button event listener. Adds a decimal to the current value
-// being displayed as long as there isn't one already
-decBtn.addEventListener("click", function() {
+
+// Adds a decimal to the current value being displayed as long as 
+// there isn't one already
+function pressDecimal() {
 	if (!hasDecimal) {
 		hasDecimal = true;
 		displayChar(".");
 	}
+}
+
+// decimal button click event listener. 
+decBtn.addEventListener("click", function() {
+	pressDecimal();	
 });
 
-// clear button event listener. Total reset to the calculation. Sets 
-// the display value to 0 and "forgets" any calculation currently 
-// taking place
-clrBtn.addEventListener("click", function() {
+// Total reset to the calculation. Sets the display value to 0 
+// and "forgets" any calculation currently taking place
+function pressClear() {
 	displayVal = "0";
 	hasDecimal = false;	
 	firstOperator = NO_OP;
@@ -230,7 +284,12 @@ clrBtn.addEventListener("click", function() {
 	opPressed = false;
 	equPressed = false;
 	notANumber = false;
-	output(displayVal);	
+	output(displayVal);
+}
+
+// clear button click event listener. 
+clrBtn.addEventListener("click", function() {
+	pressClear();		
 });
 
 // handles addition / subtraction operations. Action is
@@ -276,14 +335,24 @@ function handleAddSub(operator)
 	output(displayVal);	
 }
 
-// addition button event listener. 
+// performs the action of pressing the addition button
+function pressAdd() {
+	handleAddSub(PLUS);
+}
+
+// addition button click event listener. 
 addBtn.addEventListener("click", function() {
-	handleAddSub(PLUS);	
+	pressAdd();	
 });
+
+// performs the action of pressing the subtraction button
+function pressSub() {
+	handleAddSub(MINUS);
+}
 
 // subtraction button event listener.
 subBtn.addEventListener("click", function() {
-	handleAddSub(MINUS);
+	pressSub();	
 });
 
 // Handles action following the multiplication, division, or
@@ -333,24 +402,38 @@ function handleMulDivMod(operator) {
 	output(displayVal);		
 }
 
+// performs the action of pressing the multiplication button
+function pressMult() {
+	handleMulDivMod(TIMES);	
+}
 
-// multiplication button event listener
+// multiplication button click event listener
 mulBtn.addEventListener("click", function() {
-	handleMulDivMod(TIMES);
+	pressMult();	
 });
 
-// division button event listener
-divBtn.addEventListener("click", function() {
+// performs the action of pressing the division button
+function pressDiv() {
 	handleMulDivMod(DIV);
+}
+
+// division button click event listener
+divBtn.addEventListener("click", function() {
+	pressDiv();	
 });
 
-// modulo button event listener
-modBtn.addEventListener("click", function() {
+// performs the action of pressing the modulo button
+function pressMod() {
 	handleMulDivMod(MOD);
+}
+
+// modulo button click event listener
+modBtn.addEventListener("click", function() {
+	pressMod();	
 });
 
-// equals button event listener.
-equBtn.addEventListener("click", function() {
+// performs the action of pressing the equals button
+function pressEquals() {
 	// if an operator was just pressed, prior to pressing equals, 
 	// ignore that operator
 	if (opPressed) {	
@@ -384,5 +467,235 @@ equBtn.addEventListener("click", function() {
 	firstOperator = NO_OP;
 	lastOperator = NO_OP;
 	hasDecimal = false;	
-	output(displayVal);	
+	output(displayVal);
+}
+
+// equals button click event listener.
+equBtn.addEventListener("click", function() {
+	pressEquals();	
 });
+
+
+// holds true if the user is currently holding shift
+let isShifted = false;
+// holds true if the key was entered with a shift
+let shiftedVal = false;
+// holds the value of the key that was pressed down
+let keyValue = null;
+// if the input value was shifted, holds the unshifted value of
+// that key (as a .key value). Otherwise holds nothing
+let unshiftVal = null;
+
+// event listener for keyboard keydown action. On keydown, the styling
+// of the relevant button is changed, but no action is taken on the 
+// calculation until keyup. Only allows one key on the calculator to 
+// be down at a time.
+
+document.addEventListener("keydown", function(event) {
+	console.log(`Keydown: ${event.key} / Keycode: ${event.keyCode}`);
+	if (keyValue === null) {
+		pressedVal = event.key || event.keyCode;
+		if (!isShifted) {
+			if (pressedVal === "Shift" || pressedVal === 16) {
+				isShifted = true;
+			}
+			else if (pressedVal === "0" || pressedVal === 48) {
+				zeroBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;	
+			}
+			else if (pressedVal === "1" || pressedVal === 49) {
+				oneBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;	
+			}
+			else if (pressedVal === "2" || pressedVal === 50) {
+				twoBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "3" || pressedVal === 51) {
+				threeBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "4" || pressedVal === 52) {
+				fourBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "5" || pressedVal === 53) {
+				fiveBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "6" || pressedVal === 54) {
+				sixBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "7" || pressedVal === 55) {
+				sevenBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "8" || pressedVal === 56) {
+				eightBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "9" || pressedVal === 57) {
+				nineBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "." || pressedVal === 190) {
+				decBtn.classList.toggle("activeOperand");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "=" || pressedVal === 187 
+				|| pressedVal === "Enter" || pressedVal === 13) {
+				equBtn.classList.toggle("activeEquals");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "c" || pressedVal === 187) {
+				clrBtn.classList.toggle("activeClear");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "/" || pressedVal === 191) {
+				divBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "-" || pressedVal === 189) {
+				subBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+			}
+			else if (pressedVal === "n" || pressedVal === 78) {
+				plmBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+			}
+		}
+
+		// shifted values
+		else {
+			if (pressedVal === "%" || pressedVal === 53) {
+				modBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+				shiftedVal = true;
+				unshiftVal = "5";				
+			}
+			else if (pressedVal === "*" || pressedVal === 56) {
+				mulBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+				shiftedVal = true;
+				unshiftVal = "8";				
+			}
+			else if (pressedVal === "+" || pressedVal === 187) {
+				addBtn.classList.toggle("activeOperator");
+				keyValue = pressedVal;
+				shiftedVal = true;
+				unshiftVal = "=";
+			}	
+		}
+	}		
+});
+
+// resets the two variables used to track input
+function resetInput() {
+	keyValue = null;	
+	shiftedVal = false;
+}		
+
+// event listener for keyboard keyup action. On keyup the original 
+// styling for the button is returned and the actual action of pressing
+// the button is taken. 
+
+document.addEventListener("keyup", function(event) {
+	console.log(`Keyup: ${event.key} / Keycode: ${event.keyCode}`);
+	let upValue = event.key || event.keyCode;
+
+	if (upValue === "Shift" || upValue === 16) {
+		isShifted = false;
+	}
+	
+	else if (upValue === keyValue || upValue === unshiftVal) {
+		if (!shiftedVal) {
+			if (keyValue === "0" || keyValue === 48) {
+				zeroBtn.classList.toggle("activeOperand");
+				pressZero();	
+			}
+			else if (keyValue === "1" || keyValue === 49) {
+				oneBtn.classList.toggle("activeOperand");
+				pressOne();	
+			}
+			else if (keyValue === "2" || keyValue === 50) {
+				twoBtn.classList.toggle("activeOperand");
+				pressTwo();
+			}
+			else if (keyValue === "3" || keyValue === 51) {
+				threeBtn.classList.toggle("activeOperand");
+				pressThree();
+			}
+			else if (keyValue === "4" || keyValue === 52) {
+				fourBtn.classList.toggle("activeOperand");
+				pressFour();
+			}
+			else if (keyValue === "5" || keyValue === 53) {
+				fiveBtn.classList.toggle("activeOperand");
+				pressFive();
+			}
+			else if (keyValue === "6" || keyValue === 54) {
+				sixBtn.classList.toggle("activeOperand");
+				pressSix();
+			}
+			else if (keyValue === "7" || keyValue === 55) {
+				sevenBtn.classList.toggle("activeOperand");
+				pressSeven();
+			}
+			else if (keyValue === "8" || keyValue === 56) {
+				eightBtn.classList.toggle("activeOperand");
+				pressEight();
+			}
+			else if (keyValue === "9" || keyValue === 57) {
+				nineBtn.classList.toggle("activeOperand");
+				pressNine();
+			}
+			else if (keyValue === "." || keyValue === 190) {
+				decBtn.classList.toggle("activeOperand");
+				pressDecimal();
+			}
+			else if (keyValue === "=" || keyValue === 187
+				|| keyValue === "Enter" || keyValue === 13) {
+				equBtn.classList.toggle("activeEquals");
+				pressEquals();
+			}
+			else if (keyValue === "-" || keyValue === 189) {
+				subBtn.classList.toggle("activeOperator");
+				pressSub();
+			}
+			else if (keyValue === "/" || keyValue === 191) {
+				divBtn.classList.toggle("activeOperator");
+				pressDiv();
+			}
+			else if (keyValue === "c" || keyValue === 67) {
+				clrBtn.classList.toggle("activeClear");
+				pressClear();
+			}
+			else if (keyValue === "n" || keyValue === 78) {
+				plmBtn.classList.toggle("activeOperator");
+				pressPlusMinus();
+			}
+		}
+		// the input value was shifted
+		else {
+			if (keyValue === "%" || keyValue === 53) {
+				modBtn.classList.toggle("activeOperator");
+				pressMod();
+			} 
+			else if (keyValue === "*" || keyValue === 56) {
+				mulBtn.classList.toggle("activeOperator");
+				pressMult();
+			}
+			else if (keyValue === "+" || keyValue === 187) {
+				addBtn.classList.toggle("activeOperator");
+				pressAdd();
+			}
+		}
+		// reset the variables associated with tracking the
+		// input
+		keyValue = null;
+		shiftedVal = false;
+		unshiftVal = null;
+	}	
+});
+

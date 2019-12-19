@@ -116,6 +116,14 @@ h1 {
 	transition: background-color 0s;	
 }
 
+.activeOperand {
+	color: black;
+	background-color: #8fe2e6;
+	transition: background-color 0s;
+	box-shadow: 2px 2px #000000;
+	transition: 0s box-shadow;
+}
+
 .operator {
 	background-color: #e2b460;
 	font-size: 28px;
@@ -128,14 +136,38 @@ h1 {
 	transition: background-color 0s;
 }
 
+.activeOperator {
+	color: white;
+	background-color: #e89907;
+	transition: background-color 0s;	
+	box-shadow: 2px 2px #000000;
+	transition: 0s box-shadow;
+}
+
 #equals:active {
 	color: white;
 	background-color: #d46679;
 	transition: background-color 0s;
 }
 
+.activeEquals {
+	color: white;
+	background-color: #d46679;
+	transition: background-color 0s;
+	box-shadow: 2px 2px #000000;
+	transition: 0s box-shadow;		
+}
+
 #clear:active {
 	color: white;
 	background-color: #d0d000;
 	transition: background-color 0s;
+}
+
+.activeClear {
+	color: white;
+	background-color: #d0d000;
+	transition: background-color 0s;
+	box-shadow: 2px 2px #000000;
+	transition: 0s box-shadow;
 }

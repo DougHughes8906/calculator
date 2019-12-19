@@ -78,8 +78,18 @@ function output(value) {
 			else if (value.length - 1 > maxDigits) {
 				let decimalPlace = value.indexOf(".");
 				let decimalDigits = maxDigits - decimalPlace;	
-				value = valNum.toFixed(decimalDigits);					
-			}
+				value = valNum.toFixed(decimalDigits);
+				// delete trailing zeros after the decimal, and the decimal
+				// itself if all zeros after have been deleted
+				let endVal = value.charAt(value.length - 1);
+				while (endVal === "0") {
+					value = value.slice(0, value.length - 1);
+					endVal = value.charAt(value.length - 1);
+				}	
+				if (endVal === ".") {
+					value = value.slice(0, value.length - 1);
+				}
+			}		
 		}
 		if (isNeg) {
 					value = "-" + value;

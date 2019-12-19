@@ -4,18 +4,18 @@ The buttons on the calculator can either be clicked with the mouse or pressed wi
 
 All digits and decimal ('.'): exactly the same values on keyboard
 
-AC (clear) button: 	'c'
+- AC (clear) button: 	'c'
 
-+ / - button:		'n'
+- \+ / - button:		'n'
 
-% button:		'%'
+- % button:		'%'
 
-÷  button:		'/'
+- ÷  button:		'/'
 
-X button:		'*'
+- X button:		'*'
 
-- button: 		'-'
+- \- button: 		'-'
 
-+ button:		'+'
+- \+ button:		'+'
 
-= button:		Either '=' or 'Enter' 
+- = button:		Either '=' or 'Enter' 
